@@ -1,0 +1,177 @@
+[
+ {
+  "chapter": 1,
+  "title": "Introduction to Valuation",
+  "pdf_start": 3
+ },
+ {
+  "chapter": 2,
+  "title": "Approaches to Valuation",
+  "pdf_start": 16
+ },
+ {
+  "chapter": 3,
+  "title": "Understanding Financial Statements",
+  "pdf_start": 37
+ },
+ {
+  "chapter": 4,
+  "title": "The Basics of Risk",
+  "pdf_start": 81
+ },
+ {
+  "chapter": 5,
+  "title": "Option Pricing Theory and Models",
+  "pdf_start": 121
+ },
+ {
+  "chapter": 6,
+  "title": "Market Efficiency: Theory and Models",
+  "pdf_start": 152
+ },
+ {
+  "chapter": 7,
+  "title": "Riskless Rates and Risk Premiums",
+  "pdf_start": 211
+ },
+ {
+  "chapter": 8,
+  "title": "Estimating Risk Parameters and Costs of Financing",
+  "pdf_start": 246
+ },
+ {
+  "chapter": 9,
+  "title": "Measuring Earnings",
+  "pdf_start": 310
+ },
+ {
+  "chapter": 10,
+  "title": "From Earnings to Cash Flows",
+  "pdf_start": 341
+ },
+ {
+  "chapter": 11,
+  "title": "Estimating Growth",
+  "pdf_start": 373
+ },
+ {
+  "chapter": 12,
+  "title": "Closure in Valuation: Estimating Terminal Value",
+  "pdf_start": 425
+ },
+ {
+  "chapter": 13,
+  "title": "Dividend Discount Models",
+  "pdf_start": 450
+ },
+ {
+  "chapter": 14,
+  "title": "Free Cashflow to Equity Models",
+  "pdf_start": 487
+ },
+ {
+  "chapter": 15,
+  "title": "Firm Valuation: Cost of Capital and APV Approaches",
+  "pdf_start": 533
+ },
+ {
+  "chapter": 16,
+  "title": "Estimating Equity Value Per Share",
+  "pdf_start": 593
+ },
+ {
+  "chapter": 17,
+  "title": "Fundamental Principles of Relative Valuation",
+  "pdf_start": 637
+ },
+ {
+  "chapter": 18,
+  "title": "Earnings Multiples",
+  "pdf_start": 659
+ },
+ {
+  "chapter": 19,
+  "title": "Book Value Multiples",
+  "pdf_start": 718
+ },
+ {
+  "chapter": 20,
+  "title": "Revenue and Sector-Specific Multiples",
+  "pdf_start": 760
+ },
+ {
+  "chapter": 21,
+  "title": "Valuing Financial Service Firms",
+  "pdf_start": 802
+ },
+ {
+  "chapter": 22,
+  "title": "Valuing Firms with Negative Earnings",
+  "pdf_start": 847
+ },
+ {
+  "chapter": 23,
+  "title": "Valuing Young and Start-up Firms",
+  "pdf_start": 891
+ },
+ {
+  "chapter": 24,
+  "title": "Valuing Private Firms",
+  "pdf_start": 928
+ },
+ {
+  "chapter": 25,
+  "title": "Acquisitions and Takeovers",
+  "pdf_start": 969
+ },
+ {
+  "chapter": 26,
+  "title": "Valuing Real Estate",
+  "pdf_start": 1028
+ },
+ {
+  "chapter": 27,
+  "title": "Valuing Other Assets",
+  "pdf_start": 1067
+ },
+ {
+  "chapter": 28,
+  "title": "The Option to Delay and Valuation Implications",
+  "pdf_start": 1090
+ },
+ {
+  "chapter": 29,
+  "title": "The Option to Expand and Abandon: Valuation Implications",
+  "pdf_start": 1124
+ },
+ {
+  "chapter": 30,
+  "title": "Valuing Equity in Distressed Firms",
+  "pdf_start": 1155
+ },
+ {
+  "chapter": 31,
+  "title": "Value Enhancement: A Discounted Cashflow Framework",
+  "pdf_start": 1176
+ },
+ {
+  "chapter": 32,
+  "title": "Value Enhancement: EVA, CFROI and Other Tools",
+  "pdf_start": 1221
+ },
+ {
+  "chapter": 33,
+  "title": "Valuing Bonds",
+  "pdf_start": 1256
+ },
+ {
+  "chapter": 34,
+  "title": "Valuing Forward and Futures Contracts",
+  "pdf_start": 1308
+ },
+ {
+  "chapter": 35,
+  "title": "Overview and Conclusions",
+  "pdf_start": 1338
+ }
+]

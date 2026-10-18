@@ -38,7 +38,9 @@ CHUNK_CHARS = 1800
 
 # Printed page = PDF page - offset. Set per book by reading one page; Hull's ch.15
 # opener is PDF 344 and printed 321, so offset 23. Update when you add a book.
-PAGE_OFFSET = {"hull-9e": 23, "graham-security-analysis-6e": 52, "lynch-one-up": 0}
+PAGE_OFFSET = {"hull-9e": 23, "graham-security-analysis-6e": 52, "lynch-one-up": 0, "damodaran-investment-valuation": 0}
+# Books whose page numbers restart every chapter (Damodaran's manuscript PDF): cite by chapter + PDF page.
+CITE_BY_PDF_PAGE = {"lynch-one-up", "damodaran-investment-valuation"}
 
 SKIP_TITLES = re.compile(r"^(cover|title page|copyright|acknowledg|contents|list of|index|preface|dedication|description|untitled|about the author)", re.I)
 
@@ -50,9 +52,23 @@ def clean(text: str) -> str:
     return text.strip()
 
 
-def sections(doc) -> list[dict]:
-    """Flatten the TOC into [(chapter, section, start_pdf_page, end_pdf_page)], deepest level that exists."""
+def sections(doc, book: str) -> list[dict]:
+    """Flatten the TOC into [(chapter, section, start_pdf_page, end_pdf_page)], deepest level that exists.
+    A PDF with no TOC may carry a sidecar `<book>.chapters.json` ([{chapter,title,pdf_start}]) built by hand
+    or by tools/map_chapters.py; otherwise fall back to 8-page windows."""
     toc = doc.get_toc()
+    sidecar = CORPUS / f"{book}.chapters.json"
+    if not toc and sidecar.exists():
+        chapters = json.loads(sidecar.read_text())
+        out = []
+        for i, ch in enumerate(chapters):
+            start = ch["pdf_start"]
+            end = (chapters[i + 1]["pdf_start"] - 1) if i + 1 < len(chapters) else len(doc)
+            title = f"Chapter {ch['chapter']}: {ch['title']}"
+            # split long chapters into ~12-page sections so a citation lands within a few pages
+            for s0 in range(start, end + 1, 12):
+                out.append({"chapter": title, "section": "", "start": s0, "end": min(s0 + 11, end)})
+        return out
     if not toc:
         # No TOC: one section per 8 pages
         return [{"chapter": f"pages {p+1}-{min(p+8, len(doc))}", "section": "", "start": p + 1, "end": min(p + 8, len(doc))}
@@ -90,7 +106,7 @@ def build(book: str) -> dict:
     out_path = INDEX / f"{book}.jsonl"
     n_chunks, chapters = 0, {}
     with out_path.open("w") as out:
-        for sec in sections(doc):
+        for sec in sections(doc, book):
             text = clean("\n".join(doc[p - 1].get_text() for p in range(sec["start"], min(sec["end"], len(doc)) + 1)))
             if len(text) < 200:
                 continue
@@ -102,6 +118,7 @@ def build(book: str) -> dict:
                     "section": sec["section"],
                     "pdf_pages": [sec["start"], sec["end"]],
                     "pages": [sec["start"] - offset, sec["end"] - offset],
+                    "cite_pdf_page": book in CITE_BY_PDF_PAGE,
                     "text": chunk,
                 }
                 out.write(json.dumps(rec, ensure_ascii=False) + "\n")

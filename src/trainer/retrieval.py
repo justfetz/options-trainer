@@ -33,11 +33,13 @@ class Passage:
     pages: tuple
     score: float
     text: str
+    cite_pdf_page: bool = False
 
     def citation(self) -> str:
         where = self.section or self.chapter
         lo, hi = self.pages
-        pp = f"p. {lo}" if lo == hi else f"pp. {lo}-{hi}"
+        unit = "PDF p." if self.cite_pdf_page else "p."
+        pp = f"{unit} {lo}" if lo == hi else f"{unit.rstrip('.')}p. {lo}-{hi}" if not self.cite_pdf_page else f"PDF pp. {lo}-{hi}"
         return f"{self.book}, {where}, {pp}"
 
 
@@ -94,7 +96,7 @@ class Corpus:
         out = []
         for s, i in scored[:k]:
             c = self.chunks[i]
-            out.append(Passage(c["id"], c["book"], c["chapter"], c["section"], tuple(c["pages"]), round(s, 3), c["text"]))
+            out.append(Passage(c["id"], c["book"], c["chapter"], c["section"], tuple(c["pages"]), round(s, 3), c["text"], bool(c.get("cite_pdf_page"))))
         return out
 
 
@@ -103,14 +105,14 @@ class Corpus:
 SEARCH_TOOL = {
     "name": "search",
     "description": ("Search the reference books (Hull 9e on derivatives; Graham, Security Analysis 6e; "
-                    "Lynch, One Up on Wall Street) and return passages with citations. Use it to explain "
+                    "Lynch, One Up on Wall Street; Damodaran, Investment Valuation 2e) and return passages with citations. Use it to explain "
                     "or justify a claim. Do NOT read numbers out of passages to do arithmetic; call the "
                     "engine tools for every number."),
     "parameters": {
         "type": "object",
         "properties": {
             "query": {"type": "string", "description": "what to look up, in the book's own vocabulary"},
-            "book": {"type": "string", "enum": ["hull-9e", "graham-security-analysis-6e", "lynch-one-up"],
+            "book": {"type": "string", "enum": ["hull-9e", "graham-security-analysis-6e", "lynch-one-up", "damodaran-investment-valuation"],
                      "description": "restrict to one book (optional)"},
             "k": {"type": "integer", "minimum": 1, "maximum": 8, "default": 4},
         },

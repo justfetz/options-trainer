@@ -128,7 +128,7 @@ class App:
         if not isinstance(q, str) or not q.strip() or len(q) > 500:
             raise ValueError("query must be 1-500 characters")
         book = p.get("book")
-        if book is not None and book not in {"hull-9e", "graham-security-analysis-6e", "lynch-one-up"}:
+        if book is not None and book not in {"hull-9e", "graham-security-analysis-6e", "lynch-one-up", "damodaran-investment-valuation"}:
             raise ValueError("unknown book")
         k = int(self._num(p, "k", 1, 8, 4))
         return run_search(self.corpus, q, book, k)

@@ -1,6 +1,7 @@
 # The books you own stay on your machine. Never commit the corpus or its index.
 corpus/*.pdf
 corpus/index/
+!corpus/*.chapters.json
 # Python
 __pycache__/
 *.pyc
