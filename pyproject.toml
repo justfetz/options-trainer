@@ -1,0 +1,24 @@
+[project]
+name = "options-trainer"
+version = "0.1.0"
+description = "A teaching tool for options math: a tested pricing engine, retrieval over the books you own, and an evaluated agent on top."
+requires-python = ">=3.11"
+dependencies = []
+
+[project.optional-dependencies]
+corpus = ["pymupdf>=1.24"]
+dev = ["pytest>=8", "pymupdf>=1.24"]
+
+[tool.pytest.ini_options]
+pythonpath = ["src"]
+testpaths = ["tests"]
+
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.setuptools.package-data]
+trainer = ["web/*.html", "web/*.js", "web/*.css"]

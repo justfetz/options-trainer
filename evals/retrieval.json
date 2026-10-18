@@ -1,0 +1,14 @@
+{
+  "_about": "Retrieval golden set. 'expect_section' is the TOC section a reader would open. Scored as hit@k. Add a case whenever the search tool returns the wrong passage for a question you actually asked.",
+  "cases": [
+    {"query": "why is gamma greatest for at the money options near expiration", "book": "hull-9e", "expect_section_prefix": "19.6", "note": "BM25 baseline ranks 10.4 and 19.7 above it. Known miss."},
+    {"query": "put call parity", "book": "hull-9e", "expect_section_prefix": "11.4"},
+    {"query": "black scholes merton pricing formulas", "book": "hull-9e", "expect_section_prefix": "15.8"},
+    {"query": "implied volatility", "book": "hull-9e", "expect_section_prefix": "15.11"},
+    {"query": "why a deep in the money european put can have positive theta", "book": "hull-9e", "expect_section_prefix": "19.5"},
+    {"query": "volatility smile for equity options", "book": "hull-9e", "expect_section_prefix": "20.3"},
+    {"query": "risk neutral valuation in a binomial tree", "book": "hull-9e", "expect_section_prefix": "13.2"},
+    {"query": "margin of safety", "book": "graham-security-analysis-6e", "expect_section_prefix": "", "note": "Graham's sections are chapters; fill the chapter title once you have read it."},
+    {"query": "tenbagger", "book": "lynch-one-up", "expect_section_prefix": "Chapter 6"}
+  ]
+}

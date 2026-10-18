@@ -1,0 +1,60 @@
+# Deploys main to Google Cloud Run as the public trainer when the repository has a
+# GCP_PROJECT_ID variable and a GCP_SA_KEY secret. No-op otherwise. Copied from
+# justfetz/corrugator-shift-investigator; same origin allow-list pattern, one instance.
+name: Deploy Cloud Run
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+permissions:
+  contents: read
+concurrency: cloud-run-deploy
+jobs:
+  deploy:
+    if: ${{ vars.GCP_PROJECT_ID != '' }}
+    runs-on: ubuntu-latest
+    env:
+      PROJECT_ID: ${{ vars.GCP_PROJECT_ID }}
+      REGION: ${{ vars.GCP_REGION || 'us-central1' }}
+      SERVICE: ${{ vars.CLOUD_RUN_SERVICE || 'options-trainer' }}
+      EMBED_ORIGINS: ${{ vars.PUBLIC_DEMO_EMBED_ORIGINS || 'https://www.felixaugust.com,https://felixaugust.com' }}
+      CORPUS_BUCKET: ${{ vars.CORPUS_BUCKET }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: google-github-actions/auth@v2
+        with:
+          credentials_json: ${{ secrets.GCP_SA_KEY }}
+      - uses: google-github-actions/setup-gcloud@v2
+      - name: Collect every URL the service answers on (PUBLIC_DEMO_ORIGIN allow-list)
+        run: |
+          set -euo pipefail
+          NUMBER=$(gcloud projects describe "$PROJECT_ID" --format='value(projectNumber)')
+          DETERMINISTIC="https://${SERVICE}-${NUMBER}.${REGION}.run.app"
+          KNOWN=$(gcloud run services describe "$SERVICE" --project "$PROJECT_ID" --region "$REGION" --format=json 2>/dev/null \
+                  | python3 -c 'import json,sys,re; print(",".join(sorted(set(re.findall(r"https://[a-z0-9.-]+\.run\.app", json.dumps(json.load(sys.stdin).get("status", {})))))))' || true)
+          ORIGINS="$DETERMINISTIC"; [ -n "$KNOWN" ] && ORIGINS="${KNOWN},${DETERMINISTIC}"
+          CUSTOM="${{ vars.PUBLIC_CUSTOM_ORIGIN }}"; [ -n "$CUSTOM" ] && ORIGINS="${ORIGINS},${CUSTOM}"
+          echo "ORIGINS=${ORIGINS}" >> "$GITHUB_ENV"
+          echo "allow-listing: ${ORIGINS}"
+      - name: Deploy from source
+        run: |
+          set -euo pipefail
+          VOL=()
+          if [ -n "$CORPUS_BUCKET" ]; then
+            # The books' index lives in a private bucket, mounted read-only at /app/corpus/index.
+            VOL=(--add-volume "name=corpus,type=cloud-storage,bucket=${CORPUS_BUCKET},readonly=true" --add-volume-mount "volume=corpus,mount-path=/app/corpus/index")
+          fi
+          gcloud run deploy "$SERVICE" --source . --project "$PROJECT_ID" --region "$REGION" \
+            --allow-unauthenticated --min-instances 0 --max-instances 1 --cpu 1 --memory 512Mi \
+            --concurrency 40 --timeout 60 \
+            --set-env-vars "^|^PUBLIC_DEMO_ORIGIN=${ORIGINS}|PUBLIC_DEMO_EMBED_ORIGINS=${EMBED_ORIGINS}" "${VOL[@]}" --quiet
+      - name: Smoke test
+        run: |
+          set -euo pipefail
+          LIVE=""
+          for URL in $(echo "$ORIGINS" | tr ',' ' '); do
+            CODE=$(curl -sS -o /tmp/h.txt -w '%{http_code}' --max-time 30 "$URL/api/health" || true)
+            echo "GET $URL/api/health -> HTTP $CODE $(head -c 200 /tmp/h.txt 2>/dev/null)"
+            [ "$CODE" = "200" ] && LIVE="$URL"
+          done
+          test -n "$LIVE"

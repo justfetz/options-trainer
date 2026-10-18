@@ -1,0 +1,124 @@
+{
+  "_about": "Worked examples transcribed by hand from Hull, Options, Futures, and Other Derivatives, 9th ed. 'page' is the PRINTED page; 'pdf_page' is the page index in the PDF in corpus/. Numbers are typed from the page, never scraped: the extractor garbles math symbols. Add one per evening; each is a test in tests/test_engine.py.",
+  "cases": [
+    {
+      "id": "hull-15.6-call",
+      "source": {
+        "book": "hull-9e",
+        "chapter": 15,
+        "example": "15.6",
+        "page": 338,
+        "pdf_page": 361
+      },
+      "inputs": {
+        "S": 42,
+        "K": 40,
+        "T": 0.5,
+        "r": 0.1,
+        "sigma": 0.2,
+        "kind": "call"
+      },
+      "expect": {
+        "d1": 0.7693,
+        "d2": 0.6278,
+        "price": 4.76
+      },
+      "tolerance": {
+        "d1": 0.0005,
+        "d2": 0.0005,
+        "price": 0.005
+      },
+      "note": "The canonical BSM example. Hull also prints K e^{-rT} = 38.049."
+    },
+    {
+      "id": "hull-15.6-put",
+      "source": {
+        "book": "hull-9e",
+        "chapter": 15,
+        "example": "15.6",
+        "page": 338,
+        "pdf_page": 361
+      },
+      "inputs": {
+        "S": 42,
+        "K": 40,
+        "T": 0.5,
+        "r": 0.1,
+        "sigma": 0.2,
+        "kind": "put"
+      },
+      "expect": {
+        "price": 0.81
+      },
+      "tolerance": {
+        "price": 0.005
+      },
+      "note": "Same inputs; put-call parity must hold between this and the call."
+    },
+    {
+      "id": "hull-15.9-call-with-dividends",
+      "source": {
+        "book": "hull-9e",
+        "chapter": 15,
+        "example": "15.9",
+        "page": 343,
+        "pdf_page": 366
+      },
+      "inputs": {
+        "S": 40,
+        "K": 40,
+        "T": 0.5,
+        "r": 0.09,
+        "sigma": 0.3,
+        "kind": "call",
+        "dividends": [
+          [
+            0.16667,
+            0.5
+          ],
+          [
+            0.41667,
+            0.5
+          ]
+        ]
+      },
+      "expect": {
+        "pv_dividends": 0.9742,
+        "price": 3.67
+      },
+      "tolerance": {
+        "pv_dividends": 0.0005,
+        "price": 0.01
+      },
+      "note": "Ex-dividend in 2 and 5 months, $0.50 each. Price the option on S - PV(div) = 39.0258. Hull prints 3.67; a correct engine gives 3.6712."
+    },
+    {
+      "id": "TODO-hull-19.x-delta",
+      "source": {
+        "book": "hull-9e",
+        "chapter": 19,
+        "example": "19.1",
+        "page": null,
+        "pdf_page": null
+      },
+      "inputs": {},
+      "expect": {},
+      "tolerance": {},
+      "note": "Chapter 19 opens with a delta-hedging example and Table 19.x walks a hedge through time. Transcribe the first numeric example here; then 19.x for gamma and theta. This is the homework."
+    },
+    {
+      "id": "TODO-hull-13.x-binomial",
+      "source": {
+        "book": "hull-9e",
+        "chapter": 13,
+        "example": "13.1",
+        "page": null,
+        "pdf_page": null
+      },
+      "inputs": {},
+      "expect": {},
+      "tolerance": {},
+      "note": "The two-step tree on p. ~ch13 (S=20, up 10%/down 10%, K=21) and the American put example later in the chapter. Transcribe; the binomial test compares node values, not just the root."
+    }
+  ]
+}

@@ -1,0 +1,9 @@
+# The books you own stay on your machine. Never commit the corpus or its index.
+corpus/*.pdf
+corpus/index/
+# Python
+__pycache__/
+*.pyc
+.pytest_cache/
+.venv/
+artifacts/
