@@ -1,11 +1,34 @@
+# Two lanes. "homework" runs the engine spec and reports how many of its tests pass;
+# it never fails the build, because the engine is meant to be filled in by hand and
+# the count going up is the progress bar. "suite" is everything else and must pass.
 name: Tests
 on: [push, pull_request]
 jobs:
-  test:
+  suite:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-python@v5
         with: { python-version: "3.12" }
       - run: pip install pytest
-      - run: pytest -q
+      - name: Everything except the engine spec (retrieval skips without the private corpus)
+        run: pytest -q --ignore=tests/test_engine.py
+  homework:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with: { python-version: "3.12" }
+      - run: pip install pytest
+      - name: Engine spec (Hull is the ground truth)
+        run: |
+          set +e
+          pytest -q tests/test_engine.py -rN 2>&1 | tee engine.txt
+          PASSED=$(grep -oE '[0-9]+ passed' engine.txt | grep -oE '[0-9]+' || echo 0)
+          FAILED=$(grep -oE '[0-9]+ failed' engine.txt | grep -oE '[0-9]+' || echo 0)
+          TOTAL=$((PASSED + FAILED))
+          echo "### Engine spec: ${PASSED}/${TOTAL} passing" >> "$GITHUB_STEP_SUMMARY"
+          echo "" >> "$GITHUB_STEP_SUMMARY"
+          echo "Each failure names the Hull equation to write. Green when the engine matches the book." >> "$GITHUB_STEP_SUMMARY"
+          echo "engine spec: ${PASSED}/${TOTAL} passing"
+          exit 0
