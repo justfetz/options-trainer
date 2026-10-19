@@ -24,6 +24,7 @@ does arithmetic.
 ```bash
 pip install -e ".[dev]"
 pytest -q                     # step 1: watch the engine tests fail, then make them pass
+python3 tools/scorecard.py    # the same 18 tests as one table: what passes, what each failure is waiting on
 python3 tools/build_corpus.py # after dropping your PDFs in corpus/ (private, gitignored)
 python3 -m trainer.server     # http://127.0.0.1:7861 ; /api/health, /api/price, /api/search ...
 ```
